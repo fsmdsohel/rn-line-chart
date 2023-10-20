@@ -60,9 +60,6 @@ export const LineChartHoverTrap = () => {
           isActive.value = true;
           currentX.value = boundedX;
 
-          // on Web, we could drag the cursor to be negative, breaking it
-          // so we clamp the index at 0 to fix it
-          // https://github.com/coinjar/react-native-wagmi-charts/issues/24
           const minIndex = 0;
           const boundedIndex = Math.max(
             minIndex,
