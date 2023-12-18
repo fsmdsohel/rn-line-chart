@@ -156,7 +156,7 @@ export function LineChartPathWrapper({
           </Svg>
         </View>
       </LineChartPathContext.Provider>
-      <LineChartPathContext.Provider
+      {/* <LineChartPathContext.Provider
         value={{
           color,
           isInactive: false,
@@ -169,7 +169,7 @@ export function LineChartPathWrapper({
             {foregroundChildren}
           </AnimatedSVG>
         </View>
-      </LineChartPathContext.Provider>
+      </LineChartPathContext.Provider> */}
     </>
   );
 }
