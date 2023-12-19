@@ -1,7 +1,6 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, View } from 'react-native';
 import Animated, { useAnimatedStyle } from 'react-native-reanimated';
-import Svg, { Line as SVGLine, LineProps } from 'react-native-svg';
 
 import { LineChartDimensionsContext } from './Chart';
 import { LineChartCursor, LineChartCursorProps } from './Cursor';
@@ -10,15 +9,13 @@ import { useLineChart } from './useLineChart';
 type LineChartCursorLineProps = {
   children?: React.ReactNode;
   color?: string;
-  lineProps?: Partial<LineProps>;
 } & Omit<LineChartCursorProps, 'type' | 'children'>;
 
 LineChartCursorLine.displayName = 'LineChartCursorLine';
 
 export function LineChartCursorLine({
   children,
-  color = 'gray',
-  lineProps,
+  color = '#ED4DBC',
   ...cursorProps
 }: LineChartCursorLineProps) {
   const { height } = React.useContext(LineChartDimensionsContext);
@@ -36,18 +33,10 @@ export function LineChartCursorLine({
   return (
     <LineChartCursor {...cursorProps} type="line">
       <Animated.View style={vertical}>
-        <Svg style={styles.svg}>
-          <SVGLine
-            x1={0}
-            y1={0}
-            x2={0}
-            y2={height}
-            strokeWidth={2}
-            stroke={color}
-            strokeDasharray="3 3"
-            {...lineProps}
-          />
-        </Svg>
+        <View
+          style={[styles.line, { height: height, backgroundColor: color }]}
+        />
+        <View style={[styles.bottomTooltip, { backgroundColor: color }]} />
       </Animated.View>
       {children}
     </LineChartCursor>
@@ -55,9 +44,20 @@ export function LineChartCursorLine({
 }
 
 const styles = StyleSheet.create({
-  svg: {
-    ...StyleSheet.absoluteFillObject,
-    // height: 100% is required for <svg /> on web
-    height: '100%',
+  line: {
+    width: 1,
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    opacity: 0.8,
+  },
+  bottomTooltip: {
+    width: 5,
+    height: 5,
+    borderRadius: 2.5,
+    position: 'absolute',
+    bottom: 0,
+    left: -2,
+    opacity: 1,
   },
 });

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Platform, View, ViewProps } from 'react-native';
+import { Platform, StyleSheet, View, ViewProps } from 'react-native';
 import Animated, {
   useAnimatedStyle,
   withSpring,
@@ -25,9 +25,9 @@ LineChartCursorCrosshair.displayName = 'LineChartCursorCrosshair';
 
 export function LineChartCursorCrosshair({
   children,
-  color = 'black',
+  color = '#754EF6',
   size = 8,
-  outerSize = 32,
+  outerSize = 16,
   crosshairWrapperProps = {},
   crosshairProps = {},
   crosshairOuterProps = {},
@@ -64,15 +64,15 @@ export function LineChartCursorCrosshair({
 
   return (
     <LineChartCursor type="crosshair" {...props}>
+      {children}
       <Animated.View
         {...crosshairWrapperProps}
         style={[
           {
             width: outerSize,
             height: outerSize,
-            alignItems: 'center',
-            justifyContent: 'center',
           },
+          styles.container,
           animatedCursorStyle,
           crosshairWrapperProps.style,
         ]}
@@ -80,14 +80,8 @@ export function LineChartCursorCrosshair({
         <View
           {...crosshairOuterProps}
           style={[
-            {
-              backgroundColor: color,
-              width: outerSize,
-              height: outerSize,
-              borderRadius: outerSize,
-              opacity: 0.1,
-              position: 'absolute',
-            },
+            { width: outerSize, height: outerSize, borderRadius: outerSize },
+            styles.outer,
             crosshairOuterProps.style,
           ]}
         />
@@ -95,16 +89,35 @@ export function LineChartCursorCrosshair({
           {...crosshairProps}
           style={[
             {
-              backgroundColor: color,
               width: size,
               height: size,
               borderRadius: size,
+              backgroundColor: color,
             },
             crosshairProps.style,
           ]}
         />
       </Animated.View>
-      {children}
     </LineChartCursor>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  outer: {
+    backgroundColor: '#ffffff',
+    position: 'absolute',
+    // shadow
+    shadowColor: '#000000',
+    shadowOffset: {
+      width: 0,
+      height: 1,
+    },
+    shadowOpacity: 0.16,
+    shadowRadius: 1.51,
+    elevation: 2,
+  },
+});
