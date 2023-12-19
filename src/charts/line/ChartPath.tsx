@@ -1,18 +1,12 @@
 import * as React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { View } from 'react-native';
 import { Svg } from 'react-native-svg';
-import Animated, {
-  useAnimatedProps,
-  useSharedValue,
-  withTiming,
-  WithTimingConfig,
-} from 'react-native-reanimated';
 import flattenChildren from 'react-keyed-flatten-children';
 
 import { LineChartDimensionsContext } from './Chart';
 import { LineChartPathContext } from './LineChartPathContext';
 import { LineChartPath, LineChartPathProps } from './Path';
-import { useLineChart } from './useLineChart';
+import type { WithTimingConfig } from 'react-native-reanimated';
 
 const BACKGROUND_COMPONENTS = [
   'LineChartHighlight',
@@ -21,9 +15,6 @@ const BACKGROUND_COMPONENTS = [
   'LineChartDot',
   'LineChartTooltip',
 ];
-const FOREGROUND_COMPONENTS = ['LineChartHighlight', 'LineChartDot'];
-
-const AnimatedSVG = Animated.createAnimatedComponent(Svg);
 
 type LineChartPathWrapperProps = {
   animationDuration?: number;
@@ -43,93 +34,27 @@ type LineChartPathWrapperProps = {
 LineChartPathWrapper.displayName = 'LineChartPathWrapper';
 
 export function LineChartPathWrapper({
-  animationDuration = 300,
-  animationProps = {},
   children,
   color = 'black',
   inactiveColor,
   width: strokeWidth = 3,
-  widthOffset = 20,
   pathProps = {},
   showInactivePath = true,
-  animateOnMount,
-  mountAnimationDuration = animationDuration,
-  mountAnimationProps = animationProps,
 }: LineChartPathWrapperProps) {
-  const { height, pathWidth, width } = React.useContext(
-    LineChartDimensionsContext
-  );
-  const { currentX, isActive } = useLineChart();
-  const isMounted = useSharedValue(false);
-  const hasMountedAnimation = useSharedValue(false);
-
-  React.useEffect(() => {
-    isMounted.value = true;
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { height, width } = React.useContext(LineChartDimensionsContext);
 
   ////////////////////////////////////////////////
-
-  const svgProps = useAnimatedProps(() => {
-    const shouldAnimateOnMount = animateOnMount === 'foreground';
-    const inactiveWidth =
-      !isMounted.value && shouldAnimateOnMount ? 0 : pathWidth;
-
-    let duration =
-      shouldAnimateOnMount && !hasMountedAnimation.value
-        ? mountAnimationDuration
-        : animationDuration;
-    const props =
-      shouldAnimateOnMount && !hasMountedAnimation.value
-        ? mountAnimationProps
-        : animationProps;
-
-    if (isActive.value) {
-      duration = 0;
-    }
-
-    return {
-      width: withTiming(
-        isActive.value
-          ? // on Web, <svg /> elements don't support negative widths
-            // https://github.com/coinjar/react-native-wagmi-charts/issues/24#issuecomment-955789904
-            Math.max(currentX.value, 0)
-          : inactiveWidth + widthOffset,
-        Object.assign({ duration }, props),
-        () => {
-          hasMountedAnimation.value = true;
-        }
-      ),
-    };
-  }, [
-    animateOnMount,
-    animationDuration,
-    animationProps,
-    currentX,
-    hasMountedAnimation,
-    isActive,
-    isMounted,
-    mountAnimationDuration,
-    mountAnimationProps,
-    pathWidth,
-    widthOffset,
-  ]);
 
   const viewSize = React.useMemo(() => ({ width, height }), [width, height]);
 
   ////////////////////////////////////////////////
 
   let backgroundChildren;
-  let foregroundChildren;
   if (children) {
     const iterableChildren = flattenChildren(children);
     backgroundChildren = iterableChildren.filter((child) =>
       // @ts-ignore
       BACKGROUND_COMPONENTS.includes(child?.type?.displayName)
-    );
-    foregroundChildren = iterableChildren.filter((child) =>
-      // @ts-ignore
-      FOREGROUND_COMPONENTS.includes(child?.type?.displayName)
     );
   }
 

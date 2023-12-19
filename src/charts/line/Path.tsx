@@ -1,10 +1,10 @@
-import * as React from "react";
-import Animated from "react-native-reanimated";
-import { Defs, LinearGradient, Path, PathProps, Stop } from "react-native-svg";
+import * as React from 'react';
+import Animated from 'react-native-reanimated';
+import { Defs, LinearGradient, Path, PathProps, Stop } from 'react-native-svg';
 
-import { LineChartDimensionsContext } from "./Chart";
-import { LineChartPathContext } from "./LineChartPathContext";
-import useAnimatedPath from "./useAnimatedPath";
+import { LineChartDimensionsContext } from './Chart';
+import { LineChartPathContext } from './LineChartPathContext';
+import useAnimatedPath from './useAnimatedPath';
 
 const AnimatedPath = Animated.createAnimatedComponent(Path);
 
@@ -35,10 +35,10 @@ export type LineChartPathProps = Animated.AnimateProps<PathProps> & {
   }>;
 };
 
-LineChartPath.displayName = "LineChartPath";
+LineChartPath.displayName = 'LineChartPath';
 
 export function LineChartPath({
-  color = "black",
+  color = 'black',
   inactiveColor,
   width: strokeWidth = 3,
   threshold = [],
@@ -65,7 +65,7 @@ export function LineChartPath({
             return (
               <Stop
                 key={index}
-                offset={item.value + "%"}
+                offset={item.value + '%'}
                 stopColor={item.color}
               />
             );
@@ -77,12 +77,13 @@ export function LineChartPath({
         fill="transparent"
         stroke={
           threshold.length
-            ? "url(#gradient)"
+            ? 'url(#gradient)'
             : isInactive
             ? inactiveColor || color
             : color
         }
-        strokeOpacity={isInactive && !inactiveColor ? 0.2 : 1}
+        // strokeOpacity={isInactive && !inactiveColor ? 0.2 : 1}
+        strokeOpacity={1}
         strokeWidth={strokeWidth}
         {...props}
       />
