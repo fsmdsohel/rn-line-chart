@@ -49,7 +49,7 @@ type HorizontalLineProps = {
 LineChartHorizontalLine.displayName = 'LineChartHorizontalLine';
 
 export function LineChartHorizontalLine({
-  color = 'gray',
+  color = '#7962E5',
   lineProps = {},
   at = { index: 0 },
   offsetY = 0,
@@ -99,9 +99,10 @@ export function LineChartHorizontalLine({
   return (
     <AnimatedLine
       animatedProps={lineAnimatedProps}
-      strokeWidth={2}
+      strokeWidth={1}
       stroke={color}
-      strokeDasharray="3 3"
+      strokeDasharray="0"
+      // strokeDasharray="3 3"
       {...lineProps}
     />
   );
