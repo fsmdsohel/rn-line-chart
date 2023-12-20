@@ -36,25 +36,18 @@ export function getPath({
     .domain([yDomain.min, yDomain.max])
     .range([height - gutter, gutter]);
 
-  // const path = shape
-  //   .line()
-  //   .defined((d: { timestamp: number }) =>
-  //     from || to
-  //       ? data
-  //           .slice(from, to ? to + 1 : undefined)
-  //           .find((item) => item.timestamp === d.timestamp)
-  //       : true
-  //   )
-  //   .x((_: unknown, i: number) => scaleX(xDomain ? timestamps[i] : i))
-  //   .y((d: { value: number }) => scaleY(d.value))
-  //   .curve(_shape)(data);
-
-  const newPath = shape
+  const path = shape
     .line()
+    .defined((d: { timestamp: number }) =>
+      from || to
+        ? data
+            .slice(from, to ? to + 1 : undefined)
+            .find((item) => item.timestamp === d.timestamp)
+        : true
+    )
     .x((_: unknown, i: number) => scaleX(xDomain ? timestamps[i] : i))
     .y((d: { value: number }) => scaleY(d.value))
-    .curve(shape.curveCatmullRom.alpha(0.5))(data);
+    .curve(_shape)(data);
 
-  return newPath;
-  // return path;
+  return path;
 }
