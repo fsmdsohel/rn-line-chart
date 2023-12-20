@@ -1,6 +1,6 @@
 {
   "name": "react-native-purple-charts",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "A sweet candlestick chart for React Native",
   "main": "lib/commonjs/index.js",
   "module": "lib/module/index.js",

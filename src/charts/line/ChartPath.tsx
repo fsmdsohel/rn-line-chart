@@ -141,7 +141,7 @@ export function LineChartPathWrapper({
                   y={y - 7}
                   width={
                     width > 3
-                      ? 26
+                      ? 25
                       : width > 2
                       ? 20
                       : width > 1
