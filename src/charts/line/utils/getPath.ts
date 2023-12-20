@@ -31,20 +31,30 @@ export function getPath({
   const scaleX = scaleLinear()
     .domain(xDomain ?? [Math.min(...timestamps), Math.max(...timestamps)])
     .range([0, width]);
+
   const scaleY = scaleLinear()
     .domain([yDomain.min, yDomain.max])
     .range([height - gutter, gutter]);
-  const path = shape
+
+  // const path = shape
+  //   .line()
+  //   .defined((d: { timestamp: number }) =>
+  //     from || to
+  //       ? data
+  //           .slice(from, to ? to + 1 : undefined)
+  //           .find((item) => item.timestamp === d.timestamp)
+  //       : true
+  //   )
+  //   .x((_: unknown, i: number) => scaleX(xDomain ? timestamps[i] : i))
+  //   .y((d: { value: number }) => scaleY(d.value))
+  //   .curve(_shape)(data);
+
+  const newPath = shape
     .line()
-    .defined((d: { timestamp: number }) =>
-      from || to
-        ? data
-            .slice(from, to ? to + 1 : undefined)
-            .find((item) => item.timestamp === d.timestamp)
-        : true
-    )
     .x((_: unknown, i: number) => scaleX(xDomain ? timestamps[i] : i))
     .y((d: { value: number }) => scaleY(d.value))
-    .curve(_shape)(data);
-  return path;
+    .curve(shape.curveCatmullRom.alpha(0.5))(data);
+
+  return newPath;
+  // return path;
 }
