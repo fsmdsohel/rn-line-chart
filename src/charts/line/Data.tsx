@@ -97,7 +97,7 @@ ${suggestion}`
         }: ${joinedIds}`
       : `You didn't pass any IDs to your <LineChart.Provider />'s data prop. Did you mean to pass an array instead?`;
 
-    console.error(`[react-native-wagmi-charts] Missing data "id" prop on LineChart. You must pass an id prop to <LineChart /> when using a dictionary for your data.
+    console.error(`[react-native-purple-charts] Missing data "id" prop on LineChart. You must pass an id prop to <LineChart /> when using a dictionary for your data.
 
 ${suggestion}
     `);

@@ -29,6 +29,15 @@ type LineChartPathWrapperProps = {
   animateOnMount?: 'foreground';
   mountAnimationDuration?: number;
   mountAnimationProps?: Partial<WithTimingConfig>;
+  showYAxis?: boolean;
+  yAxisProps?: {
+    yGutter?: number;
+    yLineNumber?: number;
+    maxValue?: number;
+    dashColor?: string;
+    textColor?: string;
+    textBackgroundColor?: string;
+  };
 };
 
 LineChartPathWrapper.displayName = 'LineChartPathWrapper';
@@ -40,6 +49,8 @@ export function LineChartPathWrapper({
   width: strokeWidth = 3,
   pathProps = {},
   showInactivePath = true,
+  showYAxis = false,
+  yAxisProps = {},
 }: LineChartPathWrapperProps) {
   const { height, width } = React.useContext(LineChartDimensionsContext);
 
@@ -60,31 +71,42 @@ export function LineChartPathWrapper({
 
   ////////////////////////////////////////////////
 
-  const gap = 16;
-  const zeroPointHeight = height - gap * 2;
-  const yLineNumber = 5;
+  const yGutter = yAxisProps.yGutter ?? 16;
+  const yLineNumber = yAxisProps.yLineNumber ?? 4;
+  const maxValue = yAxisProps.maxValue ?? 100;
+  const dashColor = yAxisProps.dashColor ?? '#C9C9C9';
+  const textColor = yAxisProps.textColor ?? '#000000';
+  const textBackgroundColor = yAxisProps.textBackgroundColor ?? '#FFFFFF';
+
+  const zeroPointHeight = height - yGutter * 2;
   const yLine = zeroPointHeight / yLineNumber;
+
+  const yValue = [...Array(yLineNumber + 1)].map((_, i) => {
+    return Math.round((maxValue / yLineNumber) * i);
+  });
 
   return (
     <>
-      <Svg style={styles.svg}>
-        {[...Array(yLineNumber + 1)].map((_, i) => {
-          const y = zeroPointHeight - yLine * i + gap;
-          return (
-            <React.Fragment key={i}>
-              <SVGLine
-                x1={0}
-                y1={y}
-                x2={width}
-                y2={y}
-                strokeWidth={2}
-                stroke={'#C9C9C9'}
-                strokeDasharray="2 7"
-              />
-            </React.Fragment>
-          );
-        })}
-      </Svg>
+      {showYAxis && (
+        <Svg style={styles.svg}>
+          {[...Array(yLineNumber + 1)].map((_, i) => {
+            const y = zeroPointHeight - yLine * i + yGutter;
+            return (
+              <React.Fragment key={i}>
+                <SVGLine
+                  x1={0}
+                  y1={y}
+                  x2={width}
+                  y2={y}
+                  strokeWidth={2}
+                  stroke={dashColor}
+                  strokeDasharray="2 6"
+                />
+              </React.Fragment>
+            );
+          })}
+        </Svg>
+      )}
       <LineChartPathContext.Provider
         value={{
           color,
@@ -104,27 +126,40 @@ export function LineChartPathWrapper({
           </Svg>
         </View>
       </LineChartPathContext.Provider>
-      <Svg style={styles.svg}>
-        {[...Array(yLineNumber + 1)].map((_, i) => {
-          const y = zeroPointHeight - yLine * i + gap;
-          return (
-            <React.Fragment key={i}>
-              <Rect
-                x={0}
-                y={y - 7}
-                width={16}
-                height={14}
-                fill={'#fff'}
-                rx={3}
-                ry={3}
-              />
-              <Text x={1} y={y + 3.5} fontSize={10} fill={'gray'}>
-                00
-              </Text>
-            </React.Fragment>
-          );
-        })}
-      </Svg>
+      {showYAxis && (
+        <Svg style={styles.svg}>
+          {[...Array(yLineNumber + 1)].map((_, i) => {
+            const y = zeroPointHeight - yLine * i + yGutter;
+            const width = yValue[i].toString().length;
+            return (
+              <React.Fragment key={i}>
+                <Rect
+                  x={0}
+                  y={y - 7}
+                  width={
+                    width > 3
+                      ? 26
+                      : width > 2
+                      ? 20
+                      : width > 1
+                      ? 16
+                      : width > 0
+                      ? 9
+                      : 0
+                  }
+                  height={14}
+                  fill={textBackgroundColor}
+                  rx={3}
+                  ry={3}
+                />
+                <Text x={1} y={y + 3.5} fontSize={10} fill={textColor}>
+                  {yValue[i]}
+                </Text>
+              </React.Fragment>
+            );
+          })}
+        </Svg>
+      )}
     </>
   );
 }
