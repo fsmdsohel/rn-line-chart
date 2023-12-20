@@ -37,6 +37,7 @@ type LineChartPathWrapperProps = {
     dashColor?: string;
     textColor?: string;
     textBackgroundColor?: string;
+    formatYLabel?: (value: number) => string;
   };
 };
 
@@ -82,7 +83,9 @@ export function LineChartPathWrapper({
   const yLine = zeroPointHeight / yLineNumber;
 
   const yValue = [...Array(yLineNumber + 1)].map((_, i) => {
-    return Math.round((maxValue / yLineNumber) * i);
+    return yAxisProps.formatYLabel
+      ? yAxisProps.formatYLabel((maxValue / yLineNumber) * i)
+      : Math.round((maxValue / yLineNumber) * i);
   });
 
   return (
