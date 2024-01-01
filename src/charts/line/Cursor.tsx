@@ -82,6 +82,13 @@ export function LineChartCursor({
   );
   const { currentX, currentIndex, isActive, data, xDomain } = useLineChart();
 
+  const handleHideCursor = () => {
+    setTimeout(() => {
+      isActive.value = false;
+      currentIndex.value = -1;
+    }, 5000);
+  };
+
   const onGestureEvent = useAnimatedGestureHandler<
     GestureEvent<LongPressGestureHandlerEventPayload>
   >({
@@ -120,8 +127,7 @@ export function LineChartCursor({
       }
     },
     onEnd: () => {
-      isActive.value = false;
-      currentIndex.value = -1;
+      runOnJS(handleHideCursor)();
     },
   });
 

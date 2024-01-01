@@ -112,18 +112,6 @@ export function LineChartTooltip({
       }
     }
 
-    // determine final translateY value
-    let translateY: number | undefined;
-    if (type === 'crosshair' || isStatic) {
-      translateY = y - translateYOffset;
-    } else {
-      if (position === 'top') {
-        translateY = yGutter;
-      } else {
-        translateY = height - elementHeight.value - yGutter;
-      }
-    }
-
     let opacity = isActive.value ? 1 : 0;
     if (isStatic) {
       // Only show static when there is no active cursor
@@ -134,7 +122,7 @@ export function LineChartTooltip({
       transform: [
         { translateX: x - translateXOffset },
         {
-          translateY: translateY,
+          translateY: y - translateYOffset,
         },
       ],
       opacity: opacity,
@@ -150,7 +138,6 @@ export function LineChartTooltip({
     height,
     isActive.value,
     position,
-    type,
     width,
     xGutter,
     yGutter,
