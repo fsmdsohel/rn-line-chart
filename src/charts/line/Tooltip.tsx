@@ -8,7 +8,6 @@ import Animated, {
 } from 'react-native-reanimated';
 import { LineChartPriceText, LineChartPriceTextProps } from './PriceText';
 
-import { CursorContext } from './Cursor';
 import { LineChartDimensionsContext } from './Chart';
 import type { ViewProps } from 'react-native';
 import { getXPositionForCurve } from './utils/getXPositionForCurve';
@@ -50,7 +49,6 @@ export function LineChartTooltip({
   const { width, height, parsedPath } = React.useContext(
     LineChartDimensionsContext
   );
-  const { type } = React.useContext(CursorContext);
   const { currentX, currentY, isActive } = useLineChart();
 
   const x = useSharedValue(0);
