@@ -21,6 +21,7 @@ export type LineChartCursorProps = LongPressGestureHandlerProps & {
   children: React.ReactNode;
   type: 'line' | 'crosshair';
   snapToPoint?: boolean;
+  isShowTooltip?: boolean;
 };
 
 export const CursorContext = React.createContext({ type: '' });
@@ -75,6 +76,7 @@ export function LineChartCursor({
   children,
   snapToPoint,
   type,
+  isShowTooltip = true,
   ...props
 }: LineChartCursorProps) {
   const { pathWidth: width, parsedPath } = React.useContext(
@@ -127,7 +129,9 @@ export function LineChartCursor({
       }
     },
     onEnd: () => {
-      runOnJS(handleHideCursor)();
+      if (!isShowTooltip) {
+        runOnJS(handleHideCursor)();
+      }
     },
   });
 

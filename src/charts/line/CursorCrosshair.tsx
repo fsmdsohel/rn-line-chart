@@ -31,6 +31,7 @@ export function LineChartCursorCrosshair({
   crosshairWrapperProps = {},
   crosshairProps = {},
   crosshairOuterProps = {},
+  isShowTooltip,
   ...props
 }: LineChartCursorCrosshairProps) {
   const { currentX, currentY, isActive } = useLineChart();
@@ -63,7 +64,7 @@ export function LineChartCursorCrosshair({
   );
 
   return (
-    <LineChartCursor type="crosshair" {...props}>
+    <LineChartCursor type="crosshair" {...props} isShowTooltip={isShowTooltip}>
       {children}
       <Animated.View
         {...crosshairWrapperProps}

@@ -9,6 +9,7 @@ import { useLineChart } from './useLineChart';
 type LineChartCursorLineProps = {
   children?: React.ReactNode;
   color?: string;
+  isShowTooltip?: boolean;
 } & Omit<LineChartCursorProps, 'type' | 'children'>;
 
 LineChartCursorLine.displayName = 'LineChartCursorLine';
@@ -16,6 +17,7 @@ LineChartCursorLine.displayName = 'LineChartCursorLine';
 export function LineChartCursorLine({
   children,
   color = '#ED4DBC',
+  isShowTooltip,
   ...cursorProps
 }: LineChartCursorLineProps) {
   const { height } = React.useContext(LineChartDimensionsContext);
@@ -31,7 +33,7 @@ export function LineChartCursorLine({
   );
 
   return (
-    <LineChartCursor {...cursorProps} type="line">
+    <LineChartCursor {...cursorProps} type="line" isShowTooltip={isShowTooltip}>
       <Animated.View style={vertical}>
         <View
           style={[styles.line, { height: height, backgroundColor: color }]}
