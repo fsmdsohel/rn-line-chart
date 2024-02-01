@@ -21,6 +21,7 @@ export const LineChartContext = React.createContext<TLineChartContext>({
   },
   xDomain: undefined,
   xLength: 0,
+  scale: { value: 0 },
 });
 
 type LineChartProviderProps = {
@@ -45,6 +46,7 @@ export function LineChartProvider({
   const currentX = useSharedValue(-1);
   const currentIndex = useSharedValue(-1);
   const isActive = useSharedValue(false);
+  const scale = useSharedValue(0);
 
   const domain = React.useMemo(
     () => getDomain(Array.isArray(data) ? data : Object.values(data)[0]),
@@ -66,6 +68,7 @@ export function LineChartProvider({
       xDomain,
       xLength:
         xLength ?? (Array.isArray(data) ? data : Object.values(data)[0]).length,
+      scale,
     };
   }, [
     currentIndex,
@@ -77,6 +80,7 @@ export function LineChartProvider({
     yRange?.min,
     xLength,
     xDomain,
+    scale,
   ]);
 
   useAnimatedReaction(

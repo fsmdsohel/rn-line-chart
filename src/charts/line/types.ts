@@ -1,4 +1,4 @@
-import type Animated from "react-native-reanimated";
+import type Animated from 'react-native-reanimated';
 
 export type TLineChartPoint = {
   timestamp: number;
@@ -19,6 +19,7 @@ export type TLineChartContext = {
   yDomain: YDomain;
   xLength: number;
   xDomain?: [number, number] | undefined;
+  scale: Animated.SharedValue<number>;
 };
 
 export type YRangeProp = {

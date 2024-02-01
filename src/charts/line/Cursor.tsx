@@ -5,10 +5,13 @@ import {
   LongPressGestureHandler,
   LongPressGestureHandlerEventPayload,
   LongPressGestureHandlerProps,
+  Gesture,
+  GestureDetector,
 } from 'react-native-gesture-handler';
 import Animated, {
   runOnJS,
   useAnimatedGestureHandler,
+  useSharedValue,
 } from 'react-native-reanimated';
 
 import { LineChartDimensionsContext } from './Chart';
@@ -82,7 +85,21 @@ export function LineChartCursor({
   const { pathWidth: width, parsedPath } = React.useContext(
     LineChartDimensionsContext
   );
-  const { currentX, currentIndex, isActive, data, xDomain } = useLineChart();
+  const { currentX, currentIndex, isActive, data, xDomain, scale } =
+    useLineChart();
+
+  const pinchInProgress = useSharedValue(false);
+
+  const pinchGesture = Gesture.Pinch()
+    .onStart(() => {
+      pinchInProgress.value = true;
+    })
+    .onUpdate((e) => {
+      scale.value = e.scale;
+    })
+    .onEnd(() => {
+      pinchInProgress.value = false;
+    });
 
   const handleHideCursor = () => {
     isActive.value = false;
@@ -93,7 +110,7 @@ export function LineChartCursor({
     GestureEvent<LongPressGestureHandlerEventPayload>
   >({
     onActive: ({ x }) => {
-      if (parsedPath) {
+      if (!pinchInProgress.value && parsedPath) {
         const boundedX = Math.max(0, x <= width ? x : width);
         isActive.value = true;
         const xValues = data.map(({ timestamp }, i) =>
@@ -135,17 +152,19 @@ export function LineChartCursor({
 
   return (
     <CursorContext.Provider value={{ type }}>
-      <LongPressGestureHandler
-        minDurationMs={0}
-        maxDist={999999}
-        onGestureEvent={onGestureEvent}
-        shouldCancelWhenOutside={false}
-        {...props}
-      >
-        <Animated.View style={StyleSheet.absoluteFill}>
-          {children}
-        </Animated.View>
-      </LongPressGestureHandler>
+      <GestureDetector gesture={pinchGesture}>
+        <LongPressGestureHandler
+          minDurationMs={50}
+          maxDist={999999}
+          onGestureEvent={onGestureEvent}
+          shouldCancelWhenOutside={false}
+          {...props}
+        >
+          <Animated.View style={StyleSheet.absoluteFill}>
+            {children}
+          </Animated.View>
+        </LongPressGestureHandler>
+      </GestureDetector>
     </CursorContext.Provider>
   );
 }
